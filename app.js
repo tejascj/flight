@@ -1,259 +1,183 @@
-import { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom';
-
-export function HomePage(props) {
-  const [showModal, setShowModal] = useState(false);
-  const handleGetStartedClick = () => setShowModal(true);
-  const handleModalClose = () => setShowModal(false);
-  //  handle login and create account
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const history = useHistory();
-  const [showLogin, setShowLogin] = useState(true);
-  // create account part
-  const handleCreateAccountClick = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('http://localhost:3001/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        // set the logged_in state to true and redirect to Trip component
-        setShowLogin(false);
-        props.setLoggedIn(true);
-        history.push('/trip');
-       
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  // login part
-  const handleLoginClick = async (e) => {
-    e.preventDefault();
-
-    try {
-      const response = await fetch('http://localhost:3001/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (data.status === 'success') {
-        // set the logged_in state to true and redirect to Trip component
-        setShowLogin(true);
-        props.setLoggedIn(true);
-        history.push('/trip');
-        
-      } else {
-        setError(data.message);
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
+<Modal className="modal modal-xl" show={showModal} onHide={handleModalClose} centered>
+                          <Modal.Header closeButton>
+                            <Modal.Title>Flight Booking</Modal.Title>
+                          </Modal.Header>
+                          <Modal.Body>
+                            {selectedFlight && (
 
 
+                              <div className="row">
+                                <div className="col-8">
+                                  <div classname="row">
 
-  const heroStyle = {
-    position: 'relative',
-    height: '100vh',
-    backgroundImage: 'url("https://mdbootstrap.com/img/new/fluid/city/018.jpg")',
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
-  };
+                                    <div className='container  my-3 p-2 w-100 border'>
+                                      <div className='container w-100 p-0 bg-light'><h5><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512" width="16" height="16"><path d="M381 114.9L186.1 41.8c-16.7-6.2-35.2-5.3-51.1 2.7L89.1 67.4C78 73 77.2 88.5 87.6 95.2l146.9 94.5L136 240 77.8 214.1c-8.7-3.9-18.8-3.7-27.3 .6L18.3 230.8c-9.3 4.7-11.8 16.8-5 24.7l73.1 85.3c6.1 7.1 15 11.2 24.3 11.2H248.4c5 0 9.9-1.2 14.3-3.4L535.6 212.2c46.5-23.3 82.5-63.3 100.8-112C645.9 75 627.2 48 600.2 48H542.8c-20.2 0-40.2 4.8-58.2 14L381 114.9zM0 480c0 17.7 14.3 32 32 32H608c17.7 0 32-14.3 32-32s-14.3-32-32-32H32c-17.7 0-32 14.3-32 32z" /></svg>Flight Details</h5><hr /></div>
+                                      <div className="container my-3 p-2 w-100 ">
+                                        <div className="row">
+                                          <div className="col-3">
+                                            <img src={`https://images.kiwi.com/airlines/64/${amadeusResponse[index].itineraries[0].segments[0].carrierCode}.png`} alt={amadeusResponse[index].itineraries[0].segments[0].carrierCode} />
+                                          </div>
+                                          <div className="col-9">
+                                            <div className="row">
+                                              <div className="col-3">
+                                                <div className="origin">
+                                                  {selectedAirport1.city}
+                                                  <div className="departure-time">{amadeusResponse[index].itineraries[0].segments[0].departure.at}</div>
+                                                </div>
+                                              </div>
+                                              <div className="col-6 ">
+                                                <div class="col-6"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L14.293 8 8.646 2.354a.5.5 0 0 1 0-.708z"></path><path fill-rule="evenodd" d="M2.5 8a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"></path></svg></div></div>
 
-  const overlayStyle = {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
-  const contentStyle = {
-    textAlign: 'center',
-    color: '#fff',
-  };
-
-  const titleStyle = {
-    fontSize: '3rem',
-    fontWeight: 'bold',
-    marginBottom: '1rem',
-  };
-
-  const descriptionStyle = {
-    fontSize: '1.5rem',
-    marginBottom: '2rem',
-  };
-
-  const ctaButtonStyle = {
-    fontSize: '1.5rem',
-    padding: '1rem 2rem',
-    backgroundColor: 'transparent',
-    border: '2px solid #fff',
-    borderRadius: '30px',
-    color: '#fff',
-    transition: 'all 0.3s ease',
-    cursor: 'pointer',
-    outline: 'none',
-  };
-
-  const ctaButtonHoverStyle = {
-    backgroundColor: '#fff',
-    color: '#000',
-  };
-
-  const modalStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
-    display: showModal ? 'flex' : 'none',
-    alignItems: 'center',
-    justifyContent: 'center',
-    zIndex: 9999,
-  };
-
-  const formStyle = {
-    backgroundColor: '#fff',
-    padding: '3rem',
-    borderRadius: '10px',
-    boxShadow: '0 0 10px rgba(0, 0, 0, 0.3)',
-  };
-
-  const modalCloseButtonStyle = {
-    position: 'absolute',
-    top: '1rem',
-    right: '1rem',
-    fontSize: '1.5rem',
-    fontWeight: 'bold',
-    color: '#fff',
-    cursor: 'pointer',
-  };
-
-  return (
-    <div>
-      <nav
-        className="navbar navbar-expand-lg navbar-dark fixed-top"
-        style={{ backgroundColor: 'transparent' }}
-      >
-        <div className="container">
-          <a className="navbar-brand">
-            Trip Planner AI
-          </a>
-        </div>
-      </nav>
-      <div style={heroStyle}>
-        <div style={overlayStyle}>
-          <div style={contentStyle}>
-            <h1 style={titleStyle}>Plan Your Dream Trip with AI</h1>
-            <p style={descriptionStyle}>
-              Experience stress-free trip planning with AI.
-              Let our web application do the work for you, <br></br>finding the best deals on flights and create itinerary. Enjoy a personalized itinerary tailored just for you.
-            </p>
-            <a
-              className="btn btn-outline-light btn-lg m-2"
-              role="button"
-              rel="nofollow"
-              target="_blank"
-              onClick={handleGetStartedClick}
-            >
-              Get Started
-            </a>
-          </div>
-        </div>
-      </div>
-      <Modal show={showModal} onHide={handleModalClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>{showLogin ? "Login" : "Create Account"}</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {showLogin ? (
-            <Form>
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-              </Form.Group>
-            </Form>
-          ) : (
-            <Form>
-              <Form.Group controlId="formBasicName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter name" />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder="Enter email" />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Password" />
-              </Form.Group>
-
-              <Form.Group controlId="formBasicConfirmPassword">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control type="password" placeholder="Confirm Password" />
-              </Form.Group>
-            </Form>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          {showLogin ? (
-            <>
-              <Button variant="link" onClick={handleCreateAccountClick}>
-                Create New Account
-              </Button>
-              <Button variant="primary" onClick={handleLoginClick}>
-                Login
-              </Button>
-
-            </>
-          ) : (
-            <>
-              <Button variant="link" onClick={handleLoginClick}>
-                Already have an account? Login
-              </Button>
-              <Button variant="primary" onClick={handleModalClose}>
-                Create Account
-              </Button>
-
-            </>
-          )}
-        </Modal.Footer>
-      </Modal>
-
-    </div>
-  );
-}
+                                              <div className="col-3">
+                                                <div className="destination">
+                                                  {selectedAirport2.city}
+                                                  <div className="arrival-time">{amadeusResponse[index].itineraries[0].segments[0].arrival.at}</div>
+                                                </div>
+                                              </div>
 
 
+                                            </div>
+                                            <div className="row">
+                                              <div className="col-12">
+                                                <div className="flight-code">Flight Code:{amadeusResponse[index].itineraries[0].segments[0].carrierCode} {amadeusResponse[index].itineraries[0].segments[0].number}</div>
+                                              </div>
+                                            </div>
+                                          </div>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* IMP Things */}
+                                    <div className='container  my-3 p-2 w-100 bg-light'>
+                                      <div className="container">
+                                        <h5><img src='https://flight.easemytrip.com/m_content/img/f-icon-9.png'></img>Good to Know</h5>
+                                        <p>Information you should know</p>
+                                        <ul>
+                                          <li>Airline Cancellation Fee is Rs 3000 per passenger for your selected flight on the sector Bangalore to Guwahati</li>
+                                          <li>Certify your health status through the Aarogya Setu app or the self-declaration form at the airport</li>
+                                          <li>Remember to web check-in before arriving at the airport</li>
+                                          <li>Face masks are compulsory</li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                    {/* End of IMP Things */}
+                                    <div className="col-12">
+                                      <div className='my-3 p-2 w-100 bg-light '>
+                                        <div className='container w-100 bg-light'>Passenger Details <hr /></div>
+                                        {passengerIndexes.map((index) => (
+                                          <div className="row mb-3" key={index}>
+                                            <h2>{`Passenger ${index + 1}`}</h2>
+                                            <div className="col">
+                                              <input
+                                                type="text"
+                                                className="form-control mb-3"
+                                                placeholder={`First Name`}
+                                                required
+                                                value={passengerNames[index]?.firstName || ''}
+                                                onChange={(e) => handlePassengerInputChange(e, index)}
+                                              />
+                                              <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder={`Last Name`}
+                                                required
+                                                value={passengerNames[index]?.lastName || ''}
+                                                onChange={(e) => handlePassengerInputChange(e, index)}
+                                              />
+                                            </div>
+                                          </div>
+                                        ))}
+                                      </div>
+                                      <div>
+                                        <p><h5>Contact Information</h5>Your ticket will be sent to this email address</p>
+                                        <input type="email" className="form-control mb-3" placeholder="Email Address" required />
+                                      </div>
+                                      <div>
+                                        <p><h5>Phone Number</h5></p>
+                                        <input type="text" className="form-control mb-3" placeholder="Phone Number" required />
+                                      </div>
+                                    </div>
+
+                                  </div>
+                                  <div className="col-12">
+                                    <div className="card">
+                                      <div className="card-body">
+                                        <h5 className="card-title">Payment</h5>
+                                        <p className="card-text">Please enter your credit card details below</p>
+                                        <input type="text" className="form-control mb-3" value={cardNumber}
+                                          onChange={handleCardNumberChange}
+                                          maxLength="19"
+                                          placeholder="Card Number"
+                                          required />
+                                        <input type="text" className="form-control mb-3" value={cardName}
+                                          placeholder="Name on Card"
+                                          onChange={handleCardNameChange}
+                                          required />
+
+                                        <input type="text" className="form-control mb-3" value={expiry}
+                                          onChange={handleExpiryChange}
+                                          maxLength="5"
+                                          placeholder="MM/YY"
+                                          required />
+                                        <input type="text" className="form-control mb-3"
+                                          placeholder="CVV"
+                                          value={cvv}
+                                          onChange={handleCvvChange}
+                                          maxLength="3"
+                                          required />
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <input type="checkbox" className="form-check-input mb-3" id="terms" required />
+                                  <label htmlFor="terms" className="form-check-label">I agree to the terms and conditions</label>
+                                </div>
+                                <div className="col-4">
+                                  <div className="container  my-3 p-2 w-100 bg-light" style={{ position: 'sticky', top: '20px' }}>
+                                    <div className='container'><h5 >Price Summary</h5><hr /></div>
+
+                                    <div>
+                                      <div className="row">
+                                        <div className="col-8 text-start">
+                                          <p>Base Price (People X {people})</p>
+                                        </div>
+                                        <div className="col-4 text-end">
+                                          <p>₹{amadeusResponse[index].price.base}</p>
+                                        </div>
+                                      </div>
+                                      <hr />
+                                      <div className="row">
+                                        <div className="col-8 text-start">
+                                          <p>Taxes+</p>
+                                        </div>
+                                        <div className="col-4 text-end">
+                                          <p>₹{amadeusResponse[index].price.total - amadeusResponse[index].price.base}</p>
+                                        </div>
+                                      </div>
+                                      <hr />
+                                      < div className="row">
+                                        <div className="col-8 text-start">
+                                          <p>Total Price</p>
+                                        </div>
+                                        <div className="col-4 text-end">
+                                          <p>₹{amadeusResponse[index].price.total}</p>
+                                        </div>
+                                      </div>
+
+
+
+                                    </div>
+                                  </div>
+
+
+                                </div>
+                              </div>
+
+
+                            )}
+
+                          </Modal.Body>
+                          <Modal.Footer>
+                            <Button variant="secondary" onClick={handleModalClose}>Close</Button>
+                            <Button variant="primary" >Book</Button>
+                          </Modal.Footer>
+                        </Modal>
